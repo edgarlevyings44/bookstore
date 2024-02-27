@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from ".prisma/client";
+import { validateChairData } from '../validations/chairValidation';
 
 const prisma = new PrismaClient();
 export const getAllChairs = async (req: Request, res: Response) => {
@@ -14,8 +15,17 @@ export const getChairById = async (req: Request, res: Response) => {
 }
 
 export const createChair = async (req: Request, res: Response) => {
-    const chair = await prisma.chair.create({ data: req.body });
-    res.json(chair);
+    if (!validateChairData(req, res)) {
+        return;
+    }
+    try {
+        const post = await prisma.post.create({ data: req.body  });
+        res.json(post);
+    }
+    catch (error) {
+        console.error('Error creating post:', error);
+        res.status(500).json({ error: "Failed to create post" });
+    }
 }
 
 export const updateChair = async (req: Request, res: Response) => {
