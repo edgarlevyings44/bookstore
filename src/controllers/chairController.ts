@@ -19,7 +19,7 @@ export const createChair = async (req: Request, res: Response) => {
         return;
     }
     try {
-        const post = await prisma.post.create({ data: req.body  });
+        const post = await prisma.chair.create({ data: req.body  });
         res.json(post);
     }
     catch (error) {
